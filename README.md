@@ -12,10 +12,10 @@ MySQL Connector/J 드라이버 옵션 조합에 따른 `PreparedStatement`의 �
 
 ## 2. 실험 시나리오 (4 Cases)
 
-실험 시나리오는 크게 4가지 경우로, ㅇㅇ~~입니다.
+실험 시나리오는 MySQL Connector/J의 두 핵심 성능 옵션 조합에 따른 PreparedStatement 동작 차이를 비교하기 위해 4가지 경우로 구성했습니다.
 
-> useServerPrepStmts - Server-side PreparedStatement를 사용하는 경우  
-> cachePrepStmts - 
+> `useServerPrepStmts` — Server-side PreparedStatement를 사용하여 MySQL 서버에 실행 계획을 생성하고 Binary Protocol로 실행하는 옵션  
+> `cachePrepStmts` — 동일 SQL에 대해 생성된 PreparedStatement 객체를 JDBC 드라이버 내부 LRU 캐시에 저장하고 재사용하는 옵션  
 
 | Case | `useServerPrepStmts` | `cachePrepStmts` | 동작 특징 |
 | --- | --- | --- | --- |
