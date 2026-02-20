@@ -109,8 +109,10 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
   `stmt.close()` 호출 시 `recachePreparedStatement` 메서드가 실행되는 것을 포착했습니다.  
   이 메서드 내부에서 `serverSideStatementCache`라는 Map 구조에 현재 사용한 `ServerPreparedStatement` 객체가 `put` 되는 것을 확인했습니다.
 
-> 📸 **사진 2 삽입 추천**  
 > `serverSideStatementCache` 내부에 `ServerPreparedStatement` 객체가 담겨 있는 디버그 화면
+>
+> <img width="964" height="533" alt="Image" src="https://github.com/user-attachments/assets/e22e6898-6d4f-4f79-b962-14b6f8988dd8" />
+
 
 ---
 
@@ -131,7 +133,7 @@ for (int i = 0; i < 20000; i++) {
 
 ---
 
-## 6. 결론 및 제언
+## 6. 결론
 
 1. **Case 3 (Server-side + Cache)** 환경에서 실행 계획 재사용과 객체 캐싱이 결합되어 가장 뛰어난 성능을 보입니다.
 2. 단순한 쿼리보다 **복잡한 JOIN 쿼리**일수록 서버 사이드 Prepare의 효율이 극대화됩니다.
