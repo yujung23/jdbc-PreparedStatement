@@ -19,10 +19,10 @@ MySQL Connector/J 드라이버 옵션 조합에 따른 `PreparedStatement`의 �
 
 | Case | `useServerPrepStmts` | `cachePrepStmts` | 동작 특징 |
 | --- | --- | --- | --- |
-| **1** | `false` | `false` | **기본값.** 클라이언트에서 문자열 치환 후 전송 (Text Protocol) |
-| **2** | `true` | `false` | 서버에서 실행 계획 생성. 단, 캐시 미사용으로 매번 Prepare 발생 |
-| **3** | **`true`** | **`true`** | **최적 환경.** 서버 실행 계획 재사용 및 드라이버 객체 캐싱 |
-| **4** | `false` | `true` | 클라이언트 사이드에서 생성된 객체만 드라이버에서 캐싱 |
+| **[1](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L14)** | `false` | `false` | **기본값.** 클라이언트에서 문자열 치환 후 전송 (Text Protocol) |
+| **[2](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L17)** | `true` | `false` | 서버에서 실행 계획 생성. 단, 캐시 미사용으로 매번 Prepare 발생 |
+| **[3](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L20)** | **`true`** | **`true`** | **최적 환경.** 서버 실행 계획 재사용 및 드라이버 객체 캐싱 |
+| **[4](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L23)** | `false` | `true` | 클라이언트 사이드에서 생성된 객체만 드라이버에서 캐싱 |
 
 ---
 
@@ -153,10 +153,10 @@ for (int i = 0; i < 20000; i++) {
 
 | Case | `useServerPrepStmts` | `cachePrepStmts` | 1차 실행(ms) | 2차 실행(ms) | 평균(ms) | 동작 특징 |
 |---|---|---|---:|---:|---:|---|
-| **1** | false | false | 11769 | 11189 | **11479** | 기본값 (Client-side, Text Protocol) |
-| **2** | true | false | 17965 | 14674 | **16320** | 서버 실행 계획 생성, 매번 Prepare |
-| **3** | true | true | **7368** | **7445** | **7407** | 서버 실행 계획 재사용 + 드라이버 캐싱 |
-| **4** | false | true | 9766 | 9233 | **9500** | Client PreparedStatement 객체 캐싱 |
+| **[1](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L14)** | false | false | 11769 | 11189 | **11479** | 기본값 (Client-side, Text Protocol) |
+| **[2](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L17)** | true | false | 17965 | 14674 | **16320** | 서버 실행 계획 생성, 매번 Prepare |
+| **[3](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L20)** | true | true | **7368** | **7445** | **7407** | 서버 실행 계획 재사용 + 드라이버 캐싱 |
+| **[4](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L23)** | false | true | 9766 | 9233 | **9500** | Client PreparedStatement 객체 캐싱 |
 
 
 ### 6.2 핵심 관찰 결과
