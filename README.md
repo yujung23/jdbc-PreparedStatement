@@ -109,8 +109,13 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 ##### 🔎 Point 2: 객체 캐시 적재 확인 (`recachePreparedStatement`)
 
 - **검증**  
-  `stmt.close()` 호출 시 `recachePreparedStatement` 메서드가 실행되는 것을 포착했습니다.  
-  이 메서드 내부에서 `serverSideStatementCache`라는 Map 구조에 현재 사용한 `ServerPreparedStatement` 객체가 `put` 되는 것을 확인했습니다.
+  1. `stmt.close()` 호출 전 `serverSideStatementCache` 내부의 map이 비어 있음 확인했습니다.
+
+  2. `stmt.close()` 호출 시 `recachePreparedStatement` 메서드가 실행되는 것을 포착했고, 내부 map에 ServerPreparedStatement 객체가 put 되는 과정을 확인했습니다.
+
+  3. testStmt2 생성 시점에서 해당 map에서 기존 인스턴스를 재사용합니다.
+
+  4. 결과: testStmt == testStmt2가 true임을 확인하여, close() 시점에 객체가 소멸되지 않고 캐시로 전환됨을 알 수 있습니다.
 
 > `serverSideStatementCache` 내부에 `ServerPreparedStatement` 객체가 담겨 있는 디버그 화면  
 > <img width="964" height="533" alt="Image" src="https://github.com/user-attachments/assets/e22e6898-6d4f-4f79-b962-14b6f8988dd8" />
