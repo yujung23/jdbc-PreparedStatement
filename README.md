@@ -31,7 +31,7 @@ MySQL Connector/J 드라이버 옵션 조합에 따른 `PreparedStatement`의 �
 
 ---
 
-## 4. 핵심 검증 로직 (`Main.java`)
+## 4. 핵심 검증 로직 ([Main.java](./src/main/java/state/Main.java))
 
 ### 4.1 구현체 클래스 확인
 
