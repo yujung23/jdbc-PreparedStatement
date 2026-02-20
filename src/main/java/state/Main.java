@@ -11,16 +11,16 @@ public class Main {
 		
 		// 실험하고 싶은 케이스를 주석 해제하며 실행하세요.
 		// Case 1: 기본 (Client side)
-//		String properties = "?useServerPrepStmts=false&cachePrepStmts=false";
+		// String properties = "?useServerPrepStmts=false&cachePrepStmts=false";
 		
-		// Case 2: 서버 사이드 활성화 (Server side)
+		// Case 2: 서버 사이드 활성화 
 		 String properties = "?useServerPrepStmts=true&cachePrepStmts=false";
 		
-		// Case 3: 서버 사이드 + 캐시 활성화 (Best Performance)
-//		String properties = "?useServerPrepStmts=true&cachePrepStmts=true";
+		// Case 3: 서버 사이드 + 캐시 활성화 (Best)
+		// String properties = "?useServerPrepStmts=true&cachePrepStmts=true";
 		
-		// Case 4: 서버 사이드 비활성화 +
-//		String properties = "?useServerPrepStmts=false&cachePrepStmts=true";
+		// Case 4: 서버 사이드 비활성화 + 캐시 활성화
+		// String properties = "?useServerPrepStmts=false&cachePrepStmts=true";
 		
 		String jdbcUrl = "jdbc:mysql://localhost:3306/sakila";
 		String id = "root";
@@ -28,9 +28,9 @@ public class Main {
 
 		try (Connection connection = DriverManager.getConnection(jdbcUrl + properties, id, password)) {
 
-			// [추가 포인트 1] 어떤 구현체 클래스가 생성되는지 확인
+			// [point 1] 어떤 구현체 클래스가 생성되는지 확인
 			
-//			PreparedStatement testStmt = connection.prepareStatement("SELECT * FROM actor WHERE actor_id = ?");
+			// PreparedStatement testStmt = connection.prepareStatement("SELECT * FROM actor WHERE actor_id = ?");
 			PreparedStatement testStmt = connection.prepareStatement("""
 	                SELECT a.first_name, a.last_name, c.name AS category, 
                     COUNT(r.rental_id) AS total_rentals, SUM(p.amount) AS total_revenue
@@ -48,8 +48,8 @@ public class Main {
 			System.out.println("현재 사용 중인 구현체: " + testStmt.getClass().getName());
 			testStmt.close();
 			
-			// [추가 포인트 2] 객체 캐싱(재사용) 여부 확인 (블로그 핵심 내용)
-//			PreparedStatement testStmt2 = connection.prepareStatement("SELECT * FROM actor WHERE actor_id = ?");
+			// [point 2] 객체 캐싱 여부 확인
+			// PreparedStatement testStmt2 = connection.prepareStatement("SELECT * FROM actor WHERE actor_id = ?");
 			PreparedStatement testStmt2 = connection.prepareStatement("""
 	                SELECT a.first_name, a.last_name, c.name AS category, 
                     COUNT(r.rental_id) AS total_rentals, SUM(p.amount) AS total_revenue
@@ -66,14 +66,14 @@ public class Main {
              """);
 			testStmt2.close();
 			
-			System.out.println("두 객체가 동일한가(캐싱 여부): " + (testStmt == testStmt2));
+			System.out.println("객체 캐싱 여부: " + (testStmt == testStmt2));
 
 			
 			// 성능 테스트 시작
 			long start = System.currentTimeMillis();
 			for (int i = 0; i < 20000; i++) {
 				try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM actor WHERE actor_id = ?")) {
-//					stmt.setLong(1, i + 1);
+					// stmt.setLong(1, i + 1);
 					stmt.setLong(1, (i % 200) + 1);
 					try (ResultSet rs = stmt.executeQuery()) {
 						// 결과 처리 생략
@@ -86,7 +86,7 @@ public class Main {
 			System.out.println("실행시간: " + (end - start) + "ms");
 
 			
-			// [추가 포인트 3] MySQL 서버에 Prepared Statement가 몇 개 생성되었는지 확인
+			// [point 3] MySQL 서버에 Prepared Statement가 몇 개 생성되었는지 확인
 			checkServerStatus(connection);
 		}
 	}
