@@ -75,7 +75,7 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 
 디버깅을 통해 확인한 **MySQL Connector/J**의 실제 캐싱 로직은 다음과 같습니다.
 
-##### �� 드라이버 레벨의 객체 보관 (Java Heap)
+##### 🧬 드라이버 레벨의 객체 보관 (Java Heap)
 
 `cachePrepStmts=true` 설정 시, 각 DB `Connection`은 내부적으로 **LRUCache**를 생성하여 `PreparedStatement` 객체를 관리합니다.
 
@@ -83,7 +83,7 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 - **Value**: `ServerPreparedStatement` 객체 (서버에서 발급받은 Statement ID 포함)
 
 
-##### �� 캐시 삽입 시점 (The close() Secret)
+##### 📥 캐시 삽입 시점 (The close() Secret)
 
 실제 소스 코드 분석 결과, 객체가 캐시에 들어가는 결정적인 시점은  
 **`stmt.close()` 호출 시점**임을 확인했습니다.
@@ -98,7 +98,7 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 
 #### 4.4.2 디버깅을 통한 증명 과정
 
-##### �� Point 1: 사전 판정 캐시 확인 (`serverSideStatementCheckCache`)
+##### 🔎 Point 1: 사전 판정 캐시 확인 (`serverSideStatementCheckCache`)
 
 드라이버는 실제 객체를 생성하기 전, 해당 SQL이 서버 사이드 방식으로 실행 가능한 구조인지 먼저 판별합니다.
 
@@ -112,7 +112,7 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 
 ---
 
-##### �� Point 2: 객체 캐시 적재 확인 (`recachePreparedStatement`)
+##### 🔎 Point 2: 객체 캐시 적재 확인 (`recachePreparedStatement`)
 
 - **검증**  
   1. `stmt.close()` 호출 전 `serverSideStatementCache` 내부의 map이 비어 있음 확인했습니다.
