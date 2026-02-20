@@ -170,5 +170,3 @@ for (int i = 0; i < 20000; i++) {
 ## 7. 참고 자료
 
 * [카카오페이 기술 블로그: PreparedStatement 동작 원리 분석](https://tech.kakaopay.com/post/how-preparedstatement-works-in-our-apps/)
-* [MySQL Connector/J 8.4 Reference](https://www.google.com/search?q=https://dev.mysql.com/doc/connector-j/8.4/en/connector-j-connp-props-performance-extensions.html)
-
