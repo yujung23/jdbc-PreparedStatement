@@ -64,11 +64,12 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 ```
 
 ### 4.4 디버깅을 통한 드라이버 내부 로직 검증
-**1. 기술적 메커니즘 (Internal Logic)**
+
+#### 4.4.1 기술적 메커니즘 (Internal Logic)
 
 디버깅을 통해 확인한 **MySQL Connector/J**의 실제 캐싱 로직은 다음과 같습니다.
 
-**🧬 드라이버 레벨의 객체 보관 (Java Heap)**
+##### 🧬 드라이버 레벨의 객체 보관 (Java Heap)
 
 `cachePrepStmts=true` 설정 시, 각 DB `Connection`은 내부적으로 **LRUCache**를 생성하여 `PreparedStatement` 객체를 관리합니다.
 
@@ -76,42 +77,46 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 - **Value**: `ServerPreparedStatement` 객체 (서버에서 발급받은 Statement ID 포함)
 
 
-**📥 캐시 삽입 시점 (The close() Secret)**
-실제 소스 코드 분석 결과, 객체가 캐시에 들어가는 결정적인 시점은 **`stmt.close()` 호출 시점**임을 확인했습니다.
+##### 📥 캐시 삽입 시점 (The close() Secret)
 
-- **핵심 메서드**:  
+실제 소스 코드 분석 결과, 객체가 캐시에 들어가는 결정적인 시점은  
+**`stmt.close()` 호출 시점**임을 확인했습니다.
+
+- **핵심 메서드**  
   `com.mysql.cj.jdbc.ConnectionImpl.recachePreparedStatement()`
 
-- **메커니즘**:  
+- **메커니즘**  
   쿼리 실행 중에는 객체가 외부로 노출되어 상태가 변경(파라미터 바인딩 등)될 수 있으므로,  
   사용이 안전하게 종료된(`close`) 순간 드라이버가 이를 가로채서 캐시에 보관(Recache)합니다.
-
 ---
 
-**2. 디버깅을 통한 증명 과정**
+#### 4.4.2 디버깅을 통한 증명 과정
 
-**🔎 Point 1: 사전 판정 캐시 확인 (`serverSideStatementCheckCache`)**
+##### 🔎 Point 1: 사전 판정 캐시 확인 (`serverSideStatementCheckCache`)
 
 드라이버는 실제 객체를 생성하기 전, 해당 SQL이 서버 사이드 방식으로 실행 가능한 구조인지 먼저 판별합니다.
 
-- **검증**:  
+- **검증**  
   `serverSideStatementCheckCache`를 조사한 결과, 테스트 쿼리에 대해 `Boolean.TRUE` 값이 매핑되어 있음을 확인했습니다.  
-  이는 드라이버가 해당 SQL을 Binary Protocol로 처리하기로 확정했음을 의미합니다.
+  이는 드라이버가 해당 SQL을 **Binary Protocol**로 처리하기로 확정했음을 의미합니다.
 
-<img width="686" height="96" alt="image" src="https://github.com/user-attachments/assets/cc3dc6b5-4947-4380-ab35-b1e1d0b7ba1d" />
+> `serverSideStatementCheckCache`에 쿼리와 TRUE 값이 담긴 디버그 화면  
+> <img width="600" height="192" alt="image" src="https://github.com/user-attachments/assets/d4fdcd0c-74df-43f6-935c-c4d7475819b2" />
 
 
 ---
 
-**🔎 Point 2: 객체 캐시 적재 확인 (`recachePreparedStatement`)**
+##### 🔎 Point 2: 객체 캐시 적재 확인 (`recachePreparedStatement`)
 
-- **검증**:  
+- **검증**  
   `stmt.close()` 호출 시 `recachePreparedStatement` 메서드가 실행되는 것을 포착했습니다.  
   이 메서드 내부에서 `serverSideStatementCache`라는 Map 구조에 현재 사용한 `ServerPreparedStatement` 객체가 `put` 되는 것을 확인했습니다.
 
-> `serverSideStatementCache` 내부에 `ServerPreparedStatement` 객체가 담겨 있는 디버그 화면
->
+> `serverSideStatementCache` 내부에 `ServerPreparedStatement` 객체가 담겨 있는 디버그 화면  
 > <img width="964" height="533" alt="Image" src="https://github.com/user-attachments/assets/e22e6898-6d4f-4f79-b962-14b6f8988dd8" />
+
+
+
 
 
 ---
