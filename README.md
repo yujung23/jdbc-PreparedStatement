@@ -19,10 +19,10 @@ MySQL Connector/J 드라이버 옵션 조합에 따른 `PreparedStatement`의 �
 
 | Case | `useServerPrepStmts` | `cachePrepStmts` | 동작 특징 |
 | --- | --- | --- | --- |
-| **[1](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L14)** | `false` | `false` | **기본값.** 클라이언트에서 문자열 치환 후 전송 (Text Protocol) |
-| **[2](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L17)** | `true` | `false` | 서버에서 실행 계획 생성. 단, 캐시 미사용으로 매번 Prepare 발생 |
-| **[3](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L20)** | **`true`** | **`true`** | **최적 환경.** 서버 실행 계획 재사용 및 드라이버 객체 캐싱 |
-| **[4](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/main/java/state/Main.java#L23)** | `false` | `true` | 클라이언트 사이드에서 생성된 객체만 드라이버에서 캐싱 |
+| **[1](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/test/java/test/PreparedStatementTest.java#L36)** | `false` | `false` | **기본값.** 클라이언트에서 문자열 치환 후 전송 (Text Protocol) |
+| **[2](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/test/java/test/PreparedStatementTest.java#L43)** | `true` | `false` | 서버에서 실행 계획 생성. 단, 캐시 미사용으로 매번 Prepare 발생 |
+| **[3](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/test/java/test/PreparedStatementTest.java#L50)** | **`true`** | **`true`** | **최적 환경.** 서버 실행 계획 재사용 및 드라이버 객체 캐싱 |
+| **[4](https://github.com/yujung23/jdbc-PreparedStatement/blob/main/src/test/java/test/PreparedStatementTest.java#L58)** | `false` | `true` | 클라이언트 사이드에서 생성된 객체만 드라이버에서 캐싱 |
 
 ---
 
