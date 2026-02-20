@@ -126,10 +126,6 @@ System.out.println("MySQL 서버 내 Prepared Statement 개수: " + rs.getString
 > `serverSideStatementCache` 내부에 `ServerPreparedStatement` 객체가 담겨 있는 디버그 화면  
 > <img width="964" height="533" alt="Image" src="https://github.com/user-attachments/assets/e22e6898-6d4f-4f79-b962-14b6f8988dd8" />
 
-
-
-
-
 ---
 
 ## 5. 성능 측정 전략
@@ -175,4 +171,9 @@ for (int i = 0; i < 20000; i++) {
 
 ## 7. 참고 자료
 
-* [카카오페이 기술 블로그: PreparedStatement 동작 원리 분석](https://tech.kakaopay.com/post/how-preparedstatement-works-in-our-apps/)
+[카카오페이 기술 블로그: PreparedStatement 동작 원리 분석](https://tech.kakaopay.com/post/how-preparedstatement-works-in-our-apps/)
+> JDBC PreparedStatement가 Client/Server 방식으로 동작하는 차이와 MySQL 서버 실행 계획 재사용 메커니즘을 설명하고, 옵션 설정에 따른 성능 영향성을 실험으로 검증한 글입니다.
+
+**🚀 Our Team's Differentiation (Deep Dive)**
+- 단순 조회 쿼리가 아닌 **다중 JOIN 기반 복잡 SQL**을 사용하여 서버 Prepare 효과가 실제로 크게 나타나는 환경을 구성했습니다.  
+- JDBC 드라이버 소스 레벨까지 **디버깅을 수행하여 PreparedStatement 캐싱 시점(`stmt.close`)과 내부 LRU 캐시 적재 로직**을 직접 확인했습니다.
